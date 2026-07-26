@@ -1,13 +1,13 @@
 [
   {
-    "name": "/warn",
+    "name": "/warn asks admins to reply to a member",
     "steps": [
       {
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Issue warning with optional reason"
+              "text": "Reply to a member with /warn and an optional reason."
             }
           }
         ],

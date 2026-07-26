@@ -1,13 +1,13 @@
 [
   {
-    "name": "/trust",
+    "name": "/trust asks admins to reply to a member",
     "steps": [
       {
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Mark/unmark user as trusted"
+              "text": "Reply to a member with /trust to add or remove their trusted status."
             }
           }
         ],

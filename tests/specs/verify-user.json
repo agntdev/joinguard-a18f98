@@ -1,13 +1,13 @@
 [
   {
-    "name": "Verify me",
+    "name": "Verify me explains when no verification is waiting",
     "steps": [
       {
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Initiate verification process for new members"
+              "text": "There’s no verification waiting for you. Ask an admin to add you again if needed."
             }
           }
         ],
