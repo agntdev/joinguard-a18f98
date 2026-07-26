@@ -1,6 +1,6 @@
 import type { Context } from "grammy";
-import { defaultRedisStorage } from "./toolkit/index.js";
-import { MemorySessionStorage } from "./toolkit/index.js";
+import type { StorageAdapter } from "grammy";
+import { defaultRedisStorage, MemorySessionStorage } from "./toolkit/index.js";
 
 export type VerificationState = "pending" | "verified" | "expired";
 export interface Member {
@@ -34,20 +34,35 @@ let clock: () => number = () => Date.now();
 export const now = () => clock();
 export const setClockForTests = (next?: () => number) => { clock = next ?? (() => Date.now()); };
 
-const isHarness = typeof process !== "undefined" && (process.env.VITEST === "true" || process.env.NODE_ENV === "test");
-const storage = typeof process !== "undefined" && process.env.REDIS_URL
+const isVitest = typeof process !== "undefined" && (process.env.VITEST === "true" || process.env.NODE_ENV === "test");
+let harnessStorage: StorageAdapter<GroupData> | undefined;
+const productionStorage = typeof process !== "undefined" && process.env.REDIS_URL
   ? defaultRedisStorage<GroupData>(process.env.REDIS_URL)
-  : isHarness
+  : isVitest
     ? new MemorySessionStorage<GroupData>()
     : undefined;
+
+/**
+ * The tokenless replay harness has no Redis service. Keep its storage explicit
+ * so production never silently falls back to process memory.
+ */
+export function useHarnessModerationStorage(): void {
+  harnessStorage = new MemorySessionStorage<GroupData>();
+}
+
+function activeStorage(): StorageAdapter<GroupData> | undefined {
+  return harnessStorage ?? productionStorage;
+}
 
 function key(chatId: number | string) { return `groupguard:group:${chatId}`; }
 
 export async function readGroup(chatId: number | string): Promise<GroupData | undefined> {
+  const storage = activeStorage();
   if (!storage) return undefined;
   return (await storage.read(key(chatId))) ?? EMPTY();
 }
 export async function writeGroup(chatId: number | string, group: GroupData): Promise<void> {
+  const storage = activeStorage();
   if (!storage) return;
   group.logs = group.logs.filter((entry) => entry.timestamp >= now() - 90 * 24 * 60 * 60 * 1000);
   group.updatedAt = now();
