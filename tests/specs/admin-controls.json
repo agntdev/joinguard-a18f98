@@ -1,0 +1,44 @@
+[
+  {
+    "name": "/set_welcome saves a concise greeting",
+    "steps": [
+      { "send": { "text": "/set_welcome Welcome aboard." }, "expect": [{ "method": "sendMessage", "payload": { "text": "Your welcome message is saved." } }] }
+    ]
+  },
+  {
+    "name": "/set_rules saves group rules",
+    "steps": [
+      { "send": { "text": "/set_rules Keep discussion respectful." }, "expect": [{ "method": "sendMessage", "payload": { "text": "Your group rules are saved." } }] }
+    ]
+  },
+  {
+    "name": "/view_log has a clear empty state",
+    "steps": [
+      { "send": { "text": "/view_log" }, "expect": [{ "method": "sendMessage", "payload": { "text": "No moderation actions have been recorded yet." } }] }
+    ]
+  },
+  {
+    "name": "/report_summary shows the current verified count",
+    "steps": [
+      { "send": { "text": "/report_summary" }, "expect": [{ "method": "sendMessage", "payload": { "text": "Group summary: 0 verified members. Tap Admin dashboard for the full summary." } }] }
+    ]
+  },
+  {
+    "name": "/mute requires a target",
+    "steps": [
+      { "send": { "text": "/mute" }, "expect": [{ "method": "sendMessage", "payload": { "text": "Reply to a member with /mute and an optional reason." } }] }
+    ]
+  },
+  {
+    "name": "/kick requires a target",
+    "steps": [
+      { "send": { "text": "/kick" }, "expect": [{ "method": "sendMessage", "payload": { "text": "Reply to a member with /kick and an optional reason." } }] }
+    ]
+  },
+  {
+    "name": "/ban requires a target",
+    "steps": [
+      { "send": { "text": "/ban" }, "expect": [{ "method": "sendMessage", "payload": { "text": "Reply to a member with /ban and an optional reason." } }] }
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "name": "a new member can complete verification from the welcome button",
+    "steps": [
+      {
+        "send": {
+          "update": {
+            "update_id": 1,
+            "message": {
+              "message_id": 1,
+              "date": 0,
+              "chat": { "id": -100, "type": "group", "title": "Test group" },
+              "from": { "id": 10, "is_bot": false, "first_name": "Admin" },
+              "new_chat_members": [{ "id": 2, "is_bot": false, "first_name": "New member" }]
+            }
+          }
+        },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Welcome to the group. Tap Verify me within 30 minutes to keep access." } }]
+      },
+      {
+        "send": { "callback": "verify:user", "chatId": -100, "userId": 2 },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "You’re verified. Thanks for keeping the group safe." } }
+        ]
+      }
+    ]
+  }
+]
